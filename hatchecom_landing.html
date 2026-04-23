@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>HatchEcom — eCommerce Growth Partner | Amazon & Shopify</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+<style>
+:root{
+  --bg:#0B1220;
+  --surface:#111C30;
+  --surface2:#172038;
+  --border:#1E2D4A;
+  --accent:#4A9EFF;
+  --accent2:#FFFFFF;
+  --text:#F0F4FF;
+  --muted:#4A5A7A;
+  --sub:#8A9BBF;
+  --font-head:'Syne',sans-serif;
+  --font-body:'DM Sans',sans-serif;
+  --font-mono:'JetBrains Mono',monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--font-body);overflow-x:hidden;line-height:1.6}
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar{width:4px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--accent);border-radius:2px}
+
+/* ── NAV ── */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:0 5vw;height:68px;display:flex;align-items:center;justify-content:space-between;background:rgba(11,18,32,0.85);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid rgba(74,158,255,0.08)}
+.nav-logo{font-family:var(--font-head);font-size:1.35rem;font-weight:800;letter-spacing:-.02em;color:var(--text)}
+.nav-logo span{color:var(--accent)}
+.nav-links{display:flex;align-items:center;gap:2rem}
+.nav-links a{font-family:var(--font-body);font-size:.85rem;font-weight:400;color:var(--sub);text-decoration:none;letter-spacing:.01em;transition:color .2s}
+.nav-links a:hover{color:var(--text)}
+.nav-cta{font-family:var(--font-body);font-size:.83rem;font-weight:500;padding:.5rem 1.25rem;background:transparent;border:1px solid var(--accent);color:var(--accent);border-radius:4px;cursor:pointer;text-decoration:none;letter-spacing:.02em;transition:all .25s;position:relative;overflow:hidden}
+.nav-cta::before{content:'';position:absolute;inset:0;background:var(--accent);opacity:0;transition:opacity .25s}
+.nav-cta:hover::before{opacity:.12}
+.nav-cta:hover{box-shadow:0 0 18px rgba(74,158,255,.3)}
+.burger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:4px}
+.burger span{display:block;width:22px;height:1.5px;background:var(--sub);transition:all .3s}
+.burger.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg)}
+.burger.open span:nth-child(2){opacity:0}
+.burger.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg)}
+.mobile-menu{display:none;position:fixed;top:68px;left:0;right:0;background:rgba(11,18,32,.97);backdrop-filter:blur(20px);padding:2rem 5vw;border-bottom:1px solid var(--border);z-index:99}
+.mobile-menu.open{display:flex;flex-direction:column;gap:1.25rem}
+.mobile-menu a{font-size:1rem;color:var(--sub);text-decoration:none;padding:.5rem 0;border-bottom:1px solid var(--border)}
+
+/* ── HERO ── */
+#hero{min-height:100vh;display:flex;align-items:center;position:relative;overflow:hidden;padding:0 5vw}
+.hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(74,158,255,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(74,158,255,.04) 1px,transparent 1px);background-size:60px 60px;mask-image:radial-gradient(ellipse 80% 70% at 50% 50%,black,transparent)}
+.hero-glow{position:absolute;top:20%;left:50%;transform:translateX(-50%);width:600px;height:400px;background:radial-gradient(ellipse,rgba(74,158,255,.07) 0%,transparent 70%);pointer-events:none}
+.hero-content{position:relative;z-index:2;max-width:900px}
+.hero-badge{display:inline-flex;align-items:center;gap:.5rem;font-family:var(--font-mono);font-size:.72rem;color:var(--accent);border:1px solid rgba(74,158,255,.25);border-radius:100px;padding:.35rem .9rem;margin-bottom:2rem;letter-spacing:.08em;opacity:0}
+.hero-badge::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--accent);animation:pulse-dot 2s infinite}
+@keyframes pulse-dot{0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(74,158,255,.4)}50%{opacity:.7;box-shadow:0 0 0 6px rgba(74,158,255,0)}}
+h1.hero-title{font-family:var(--font-head);font-size:clamp(2.8rem,6vw,5.5rem);font-weight:800;line-height:1.05;letter-spacing:-.03em;margin-bottom:1.5rem;opacity:0}
+h1.hero-title em{font-style:normal;color:var(--accent)}
+.hero-sub{font-size:clamp(1rem,1.8vw,1.2rem);color:var(--sub);max-width:560px;line-height:1.7;margin-bottom:2.5rem;opacity:0}
+.hero-actions{display:flex;gap:1rem;flex-wrap:wrap;opacity:0}
+.btn-primary{display:inline-flex;align-items:center;gap:.5rem;padding:.85rem 2rem;background:var(--accent);color:#fff;font-family:var(--font-body);font-size:.9rem;font-weight:600;border:none;border-radius:4px;cursor:pointer;text-decoration:none;letter-spacing:.01em;transition:all .25s;position:relative}
+.btn-primary:hover{box-shadow:0 0 30px rgba(74,158,255,.45);transform:translateY(-1px)}
+.btn-outline{display:inline-flex;align-items:center;gap:.5rem;padding:.85rem 2rem;background:transparent;color:var(--text);font-family:var(--font-body);font-size:.9rem;font-weight:500;border:1px solid var(--border);border-radius:4px;cursor:pointer;text-decoration:none;letter-spacing:.01em;transition:all .25s}
+.btn-outline:hover{border-color:var(--accent);color:var(--accent)}
+.scroll-indicator{position:absolute;bottom:2.5rem;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:.5rem;opacity:0}
+.scroll-line{width:1px;height:50px;background:linear-gradient(to bottom,var(--accent),transparent);animation:scroll-anim 2s ease-in-out infinite}
+@keyframes scroll-anim{0%{transform:scaleY(0);transform-origin:top}50%{transform:scaleY(1);transform-origin:top}51%{transform:scaleY(1);transform-origin:bottom}100%{transform:scaleY(0);transform-origin:bottom}}
+.scroll-text{font-family:var(--font-mono);font-size:.62rem;color:var(--muted);letter-spacing:.12em}
+
+/* ── SECTIONS ── */
+section{padding:7rem 5vw}
+.section-label{font-family:var(--font-mono);font-size:.7rem;color:var(--accent);letter-spacing:.15em;margin-bottom:1rem;text-transform:uppercase}
+.section-title{font-family:var(--font-head);font-size:clamp(2rem,4vw,3rem);font-weight:700;letter-spacing:-.02em;line-height:1.15;margin-bottom:1rem}
+.section-sub{color:var(--sub);font-size:1rem;max-width:560px;line-height:1.7}
+
+/* ── TRUSTED BY ── */
+#trusted{padding:4rem 5vw;border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+.trusted-inner{display:flex;align-items:center;gap:3rem;flex-wrap:wrap}
+.trusted-text{font-family:var(--font-mono);font-size:.7rem;color:var(--muted);letter-spacing:.1em;white-space:nowrap}
+.logos-track{display:flex;gap:2.5rem;align-items:center;flex-wrap:wrap;flex:1}
+.logo-item{font-family:var(--font-head);font-size:.95rem;font-weight:700;color:var(--muted);letter-spacing:.05em;padding:.5rem 1.2rem;border:1px solid var(--border);border-radius:3px;transition:all .25s;cursor:default}
+.logo-item:hover{color:var(--text);border-color:rgba(74,158,255,.3)}
+
+/* ── METRICS ── */
+#metrics{background:linear-gradient(160deg,var(--surface) 0%,var(--bg) 100%)}
+.metrics-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);border:1px solid var(--border);border-radius:8px;overflow:hidden;margin-top:3rem}
+.metric-card{background:var(--surface);padding:2.5rem 2rem;position:relative;overflow:hidden;transition:background .3s}
+.metric-card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--accent),transparent);opacity:0;transition:opacity .3s}
+.metric-card:hover{background:var(--surface2)}
+.metric-card:hover::before{opacity:1}
+.metric-icon{width:36px;height:36px;margin-bottom:1.5rem;opacity:.6}
+.metric-num{font-family:var(--font-mono);font-size:clamp(2rem,3.5vw,2.8rem);font-weight:600;color:var(--accent);display:block;margin-bottom:.4rem;letter-spacing:-.02em}
+.metric-label{font-size:.82rem;color:var(--sub);letter-spacing:.02em}
+
+/* ── SERVICES ── */
+#services .services-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;margin-top:3rem}
+.service-card{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:2rem;position:relative;overflow:hidden;transition:all .3s;cursor:default}
+.service-card::after{content:'';position:absolute;inset:0;border-radius:8px;box-shadow:inset 0 0 0 1px rgba(74,158,255,0);transition:box-shadow .3s}
+.service-card:hover{background:var(--surface2);transform:translateY(-3px)}
+.service-card:hover::after{box-shadow:inset 0 0 0 1px rgba(74,158,255,.25)}
+.service-icon{width:40px;height:40px;border-radius:6px;background:rgba(74,158,255,.08);border:1px solid rgba(74,158,255,.15);display:flex;align-items:center;justify-content:center;margin-bottom:1.25rem}
+.service-icon svg{width:20px;height:20px;stroke:var(--accent);fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+.service-title{font-family:var(--font-head);font-size:1.05rem;font-weight:700;margin-bottom:.6rem;letter-spacing:-.01em}
+.service-desc{font-size:.85rem;color:var(--sub);line-height:1.65}
+.service-link{display:inline-flex;align-items:center;gap:.35rem;font-family:var(--font-mono);font-size:.72rem;color:var(--accent);text-decoration:none;margin-top:1.25rem;letter-spacing:.04em;transition:gap .2s}
+.service-link:hover{gap:.6rem}
+
+/* ── METHODOLOGY ── */
+#methodology{background:var(--surface)}
+.method-track{display:grid;grid-template-columns:repeat(5,1fr);gap:0;margin-top:4rem;position:relative}
+.method-track::before{content:'';position:absolute;top:28px;left:10%;right:10%;height:1px;background:linear-gradient(90deg,transparent,var(--border),var(--border),var(--border),transparent)}
+.method-step{display:flex;flex-direction:column;align-items:center;text-align:center;padding:0 1rem;position:relative}
+.step-dot{width:56px;height:56px;border-radius:50%;background:var(--surface2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;margin-bottom:1.5rem;font-family:var(--font-mono);font-size:.7rem;color:var(--muted);transition:all .4s;position:relative;z-index:1}
+.method-step.active .step-dot{background:rgba(74,158,255,.1);border-color:var(--accent);color:var(--accent);box-shadow:0 0 20px rgba(74,158,255,.2)}
+.step-num{font-family:var(--font-mono);font-size:.62rem;color:var(--muted);margin-bottom:.4rem;letter-spacing:.1em}
+.step-title{font-family:var(--font-head);font-size:.95rem;font-weight:700;margin-bottom:.4rem}
+.step-desc{font-size:.78rem;color:var(--sub);line-height:1.5}
+
+/* ── CASE STUDIES ── */
+#cases .cases-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;margin-top:3rem}
+.case-card{background:var(--surface);border:1px solid var(--border);border-radius:8px;overflow:hidden;transition:all .3s}
+.case-card:hover{transform:translateY(-4px);border-color:rgba(74,158,255,.2)}
+.case-img{height:180px;background:linear-gradient(135deg,var(--surface2),var(--bg));display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
+.case-img-inner{font-family:var(--font-head);font-size:1.2rem;font-weight:800;color:rgba(255,255,255,.08);letter-spacing:.1em}
+.case-tag{position:absolute;top:1rem;left:1rem;font-family:var(--font-mono);font-size:.62rem;background:rgba(74,158,255,.1);color:var(--accent);border:1px solid rgba(74,158,255,.2);border-radius:3px;padding:.2rem .6rem;letter-spacing:.06em}
+.case-body{padding:1.5rem}
+.case-metric{font-family:var(--font-mono);font-size:1.5rem;font-weight:600;color:var(--accent);margin-bottom:.4rem}
+.case-name{font-family:var(--font-head);font-size:1rem;font-weight:700;margin-bottom:.5rem}
+.case-quote{font-size:.82rem;color:var(--sub);line-height:1.6;font-style:italic;border-left:2px solid rgba(74,158,255,.25);padding-left:.75rem}
+.case-founder{font-family:var(--font-mono);font-size:.65rem;color:var(--muted);margin-top:.75rem;letter-spacing:.04em}
+
+/* ── CTA FINAL ── */
+#cta-final{text-align:center;position:relative;overflow:hidden;padding:9rem 5vw}
+.cta-glow{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:700px;height:400px;background:radial-gradient(ellipse,rgba(74,158,255,.06) 0%,transparent 70%);pointer-events:none}
+.cta-title{font-family:var(--font-head);font-size:clamp(2.2rem,5vw,4rem);font-weight:800;letter-spacing:-.03em;margin-bottom:1rem}
+.cta-sub{color:var(--sub);font-size:1rem;margin-bottom:2.5rem}
+.email-form{display:flex;gap:.75rem;justify-content:center;flex-wrap:wrap;margin-top:1.5rem}
+.email-input{padding:.85rem 1.25rem;background:var(--surface);border:1px solid var(--border);border-radius:4px;color:var(--text);font-family:var(--font-body);font-size:.9rem;width:280px;outline:none;transition:border-color .2s}
+.email-input::placeholder{color:var(--muted)}
+.email-input:focus{border-color:rgba(74,158,255,.4)}
+.btn-pulse{animation:btn-glow 3s ease-in-out infinite}
+@keyframes btn-glow{0%,100%{box-shadow:0 0 20px rgba(74,158,255,.3)}50%{box-shadow:0 0 40px rgba(74,158,255,.6),0 0 80px rgba(74,158,255,.15)}}
+
+/* ── FOOTER ── */
+footer{background:var(--surface);border-top:1px solid var(--border);padding:4rem 5vw 2rem}
+.footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:3rem;margin-bottom:3rem}
+.footer-brand{font-family:var(--font-head);font-size:1.2rem;font-weight:800;margin-bottom:.75rem}
+.footer-brand span{color:var(--accent)}
+.footer-desc{font-size:.83rem;color:var(--sub);line-height:1.7;max-width:260px}
+.footer-col h4{font-family:var(--font-head);font-size:.82rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:1rem}
+.footer-col a{display:block;font-size:.83rem;color:var(--sub);text-decoration:none;margin-bottom:.6rem;transition:color .2s}
+.footer-col a:hover{color:var(--text)}
+.footer-bottom{display:flex;align-items:center;justify-content:space-between;padding-top:2rem;border-top:1px solid var(--border);flex-wrap:wrap;gap:1rem}
+.footer-copy{font-family:var(--font-mono);font-size:.65rem;color:var(--muted);letter-spacing:.06em}
+.social-links{display:flex;gap:.75rem}
+.social-link{width:32px;height:32px;border:1px solid var(--border);border-radius:4px;display:flex;align-items:center;justify-content:center;color:var(--muted);text-decoration:none;transition:all .25s}
+.social-link:hover{border-color:rgba(74,158,255,.4);color:var(--accent);box-shadow:0 0 12px rgba(74,158,255,.15)}
+.social-link svg{width:14px;height:14px;fill:currentColor}
+
+/* ── ANIMATIONS ── */
+.reveal{opacity:0;transform:translateY(24px)}
+.reveal-left{opacity:0;transform:translateX(-24px)}
+
+/* ── RESPONSIVE ── */
+@media(max-width:900px){
+  .metrics-grid{grid-template-columns:repeat(2,1fr)}
+  #services .services-grid{grid-template-columns:repeat(2,1fr)}
+  .footer-grid{grid-template-columns:1fr 1fr}
+  .method-track{grid-template-columns:1fr;gap:1.5rem}
+  .method-track::before{display:none}
+  .method-step{flex-direction:row;text-align:left;gap:1.25rem}
+  .step-dot{flex-shrink:0}
+  .cases-grid{grid-template-columns:1fr!important}
+}
+@media(max-width:640px){
+  .nav-links,.nav-cta{display:none}
+  .burger{display:flex}
+  h1.hero-title{font-size:2.5rem}
+  .metrics-grid{grid-template-columns:1fr 1fr}
+  #services .services-grid{grid-template-columns:1fr}
+  .trusted-inner{flex-direction:column;align-items:flex-start}
+  .footer-grid{grid-template-columns:1fr}
+  .email-form{flex-direction:column;align-items:center}
+  .email-input{width:100%;max-width:320px}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="navbar">
+  <a href="#" class="nav-logo">HATCHE<span>COM</span></a>
+  <div class="nav-links">
+    <a href="#services">Services</a>
+    <a href="#cases">Case Studies</a>
+    <a href="#methodology">About</a>
+    <a href="#">Blog</a>
+    <a href="#cta-final" class="nav-cta">Scale My Brand</a>
+  </div>
+  <div class="burger" id="burger" onclick="toggleMenu()">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+<div class="mobile-menu" id="mobile-menu">
+  <a href="#services" onclick="toggleMenu()">Services</a>
+  <a href="#cases" onclick="toggleMenu()">Case Studies</a>
+  <a href="#methodology" onclick="toggleMenu()">About</a>
+  <a href="#" onclick="toggleMenu()">Blog</a>
+  <a href="#cta-final" onclick="toggleMenu()" style="color:var(--accent)">Scale My Brand →</a>
+</div>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-grid"></div>
+  <div class="hero-glow"></div>
+  <div class="hero-content">
+    <div class="hero-badge">
+      <span>AI-POWERED ECOMMERCE GROWTH</span>
+    </div>
+    <h1 class="hero-title">
+      We grow brands<br>into <em>US market</em><br>category leaders.
+    </h1>
+    <p class="hero-sub">From market entry to scale — we embed into your business with proven strategies, AI-powered intelligence, and teams that execute with precision on Amazon and Shopify.</p>
+    <div class="hero-actions">
+      <a href="#cta-final" class="btn-primary">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+        Get a Free Growth Plan
+      </a>
+      <a href="#cases" class="btn-outline">
+        See Our Results
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+    </div>
+  </div>
+  <div class="scroll-indicator" id="scroll-ind">
+    <div class="scroll-line"></div>
+    <span class="scroll-text">SCROLL</span>
+  </div>
+</section>
+
+<!-- TRUSTED BY -->
+<div id="trusted">
+  <div class="trusted-inner">
+    <span class="trusted-text">TRUSTED BY</span>
+    <div class="logos-track">
+      <div class="logo-item">SUGARBEARHAIR</div>
+      <div class="logo-item">HAIRMAX</div>
+      <div class="logo-item">CAPILLUS</div>
+      <div class="logo-item">INSECT LORE</div>
+      <div class="logo-item">MOTOGP</div>
+      <div class="logo-item">GRANAGARD</div>
+      <div class="logo-item">AQUABLOCKS</div>
+    </div>
+  </div>
+</div>
+
+<!-- METRICS -->
+<section id="metrics">
+  <div class="section-label">BY THE NUMBERS</div>
+  <div class="section-title reveal">Growth you can<br>measure from day one.</div>
+  <div class="metrics-grid">
+    <div class="metric-card reveal">
+      <svg class="metric-icon" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+      <span class="metric-num" data-target="50" data-suffix="+">0</span>
+      <div class="metric-label">Brands Scaled in US</div>
+    </div>
+    <div class="metric-card reveal">
+      <svg class="metric-icon" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
+      <span class="metric-num" data-target="4.8" data-suffix="x" data-decimal="1">0</span>
+      <div class="metric-label">Average ROAS</div>
+    </div>
+    <div class="metric-card reveal">
+      <svg class="metric-icon" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+      <span class="metric-num" data-target="200" data-prefix="$" data-suffix="M+">0</span>
+      <div class="metric-label">Revenue Managed</div>
+    </div>
+    <div class="metric-card reveal">
+      <svg class="metric-icon" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>
+      <span class="metric-num" data-target="340" data-suffix="%">0</span>
+      <div class="metric-label">Avg. Growth Rate</div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section id="services">
+  <div class="section-label">WHAT WE DO</div>
+  <div style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:1rem;margin-bottom:3rem">
+    <div class="section-title reveal" style="margin-bottom:0">Three services.<br>One mission: scale.</div>
+    <p class="section-sub reveal" style="margin-bottom:0">We don't manage accounts. We embed into your brand and grow it like it's our own.</p>
+  </div>
+  <div class="services-grid">
+
+    <div class="service-card reveal">
+      <div class="service-icon">
+        <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/><path d="M11 8v6M8 11h6"/></svg>
+      </div>
+      <div class="service-title">Brand Intelligence</div>
+      <div class="service-desc">AI-powered category analysis, competitor positioning maps, and brand visibility audits across traditional search and LLMs. Know exactly where your brand stands before spending a dollar.</div>
+      <a href="#" class="service-link">Explore service <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+    </div>
+
+    <div class="service-card reveal">
+      <div class="service-icon">
+        <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      </div>
+      <div class="service-title">Market Entry</div>
+      <div class="service-desc">Structured entry into the US market with a profitable penetration plan. We handle Amazon setup, Shopify storefront, first-sale roadmap, and localized creative — so you land running.</div>
+      <a href="#" class="service-link">Explore service <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+    </div>
+
+    <div class="service-card reveal">
+      <div class="service-icon">
+        <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+      </div>
+      <div class="service-title">Growth Team</div>
+      <div class="service-desc">An embedded growth team without the overhead of full-time hires. Weekly sprints, continuous optimization, and relentless execution across paid media, listings, and CRO.</div>
+      <a href="#" class="service-link">Explore service <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+    </div>
+
+    <div class="service-card reveal" style="background:rgba(74,158,255,.04);border-color:rgba(74,158,255,.2)">
+      <div class="service-icon" style="background:rgba(74,158,255,.12);border-color:rgba(74,158,255,.3)">
+        <svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 10 10"/><path d="M12 6v6l4 2"/><path d="M16 2l4 4-4 4"/><path d="M20 6h-4"/></svg>
+      </div>
+      <div style="display:inline-flex;align-items:center;gap:.4rem;font-family:var(--font-mono);font-size:.62rem;color:var(--accent);background:rgba(74,158,255,.08);border:1px solid rgba(74,158,255,.2);border-radius:3px;padding:.2rem .6rem;margin-bottom:.75rem;letter-spacing:.06em">EARLY ACCESS</div>
+      <div class="service-title">HatchOmni AI</div>
+      <div class="service-desc">See what AI models say about your brand — before your competitors do. Our proprietary intelligence platform maps your brand's visibility across ChatGPT, Claude, Perplexity, and beyond.</div>
+      <a href="#" class="service-link" style="color:var(--accent)">Request early access <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+    </div>
+
+    <div class="service-card reveal">
+      <div class="service-icon">
+        <svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+      </div>
+      <div class="service-title">Marketplace Growth</div>
+      <div class="service-desc">Full-funnel Amazon management: listing optimization, A+ content, PPC strategy, review generation, and Buy Box dominance. We treat your Amazon store like a business, not a side channel.</div>
+      <a href="#" class="service-link">Explore service <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+    </div>
+
+    <div class="service-card reveal">
+      <div class="service-icon">
+        <svg viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+      </div>
+      <div class="service-title">Brand Growth</div>
+      <div class="service-desc">DTC strategy, Shopify CRO, performance creative, email flows, and retention programs. We build brands that customers return to — not just products they bought once.</div>
+      <a href="#" class="service-link">Explore service <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+    </div>
+
+  </div>
+</section>
+
+<!-- METHODOLOGY -->
+<section id="methodology">
+  <div class="section-label">HOW WE WORK</div>
+  <div class="section-title reveal">The HatchGrowth Method</div>
+  <p class="section-sub reveal">A three-phase framework built from 50+ brand launches. No guesswork — just a repeatable system that works.</p>
+  <div class="method-track">
+    <div class="method-step active reveal">
+      <div class="step-dot">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      </div>
+      <div>
+        <div class="step-num">01</div>
+        <div class="step-title">Diagnose</div>
+        <div class="step-desc">Brand intelligence audit, category mapping, AI visibility report, and competitive landscape analysis.</div>
+      </div>
+    </div>
+    <div class="method-step reveal">
+      <div class="step-dot">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+      </div>
+      <div>
+        <div class="step-num">02</div>
+        <div class="step-title">Strategize</div>
+        <div class="step-desc">90-day growth roadmap, channel prioritization, budget allocation, and KPI targets agreed upfront.</div>
+      </div>
+    </div>
+    <div class="method-step reveal">
+      <div class="step-dot">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+      </div>
+      <div>
+        <div class="step-num">03</div>
+        <div class="step-title">Launch</div>
+        <div class="step-desc">Amazon listings, Shopify store, paid campaigns, and content — all live and optimized before day 30.</div>
+      </div>
+    </div>
+    <div class="method-step reveal">
+      <div class="step-dot">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>
+      </div>
+      <div>
+        <div class="step-num">04</div>
+        <div class="step-title">Scale</div>
+        <div class="step-desc">Weekly sprint reviews, budget scaling, new channel expansion, and product line extensions.</div>
+      </div>
+    </div>
+    <div class="method-step reveal">
+      <div class="step-dot">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21.21 15.89A10 10 0 118 2.83"/><path d="M22 12A10 10 0 0012 2v10z"/></svg>
+      </div>
+      <div>
+        <div class="step-num">05</div>
+        <div class="step-title">Optimize</div>
+        <div class="step-desc">Monthly audits, algorithm adaptation, AI visibility maintenance, and compounding growth cycles.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CASE STUDIES -->
+<section id="cases" style="background:linear-gradient(135deg,var(--bg) 0%,var(--surface) 100%)">
+  <div class="section-label">RESULTS THAT SPEAK</div>
+  <div style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:1rem;margin-bottom:0">
+    <div class="section-title reveal">Brands we've built.<br>Numbers that prove it.</div>
+    <a href="#" class="btn-outline reveal" style="white-space:nowrap">View all cases →</a>
+  </div>
+  <div class="cases-grid" style="margin-top:3rem">
+
+    <div class="case-card reveal">
+      <div class="case-img" style="background:linear-gradient(135deg,#0d1a30,#0B1220)">
+        <div class="case-img-inner">HEALTH</div>
+        <div class="case-tag">HEALTH & WELLNESS</div>
+      </div>
+      <div class="case-body">
+        <div class="case-metric">3x Revenue</div>
+        <div class="case-name">Fashion Gold — From Brazil to US Market</div>
+        <div class="case-quote">"HatchEcom didn't just launch our Amazon store — they built a scalable machine. 3x revenue growth in 6 months, from zero US presence to category visibility."</div>
+        <div class="case-founder">— CEO, Fashion Gold  ·  6 months</div>
+      </div>
+    </div>
+
+    <div class="case-card reveal">
+      <div class="case-img" style="background:linear-gradient(135deg,#0d1030,#0B1220)">
+        <div class="case-img-inner">BEAUTY</div>
+        <div class="case-tag">BEAUTY</div>
+      </div>
+      <div class="case-body">
+        <div class="case-metric">+40% Margins</div>
+        <div class="case-name">Beauty Brand — Organic Amazon Growth</div>
+        <div class="case-quote">"Switching from ad-heavy to organic-first strategy was the best decision. HatchEcom's listing optimization and A+ content drove 40% higher profit margins within a quarter."</div>
+        <div class="case-founder">— Founder, Beauty Brand  ·  3 months</div>
+      </div>
+    </div>
+
+    <div class="case-card reveal">
+      <div class="case-img" style="background:linear-gradient(135deg,#0B1220,#081020)">
+        <div class="case-img-inner">TOYS</div>
+        <div class="case-tag">TOYS & OUTDOOR</div>
+      </div>
+      <div class="case-body">
+        <div class="case-metric">+30% CVR</div>
+        <div class="case-name">Toys Brand — A+ Content & Video Impact</div>
+        <div class="case-quote">"The A+ Content and video strategy completely transformed our product pages. 30% lift in conversion rate, and we went from page 3 to page 1 on 12 core keywords."</div>
+        <div class="case-founder">— VP Marketing, Toys Brand  ·  4 months</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- CTA FINAL -->
+<section id="cta-final">
+  <div class="cta-glow"></div>
+  <div style="position:relative;z-index:2;max-width:680px;margin:0 auto">
+    <div class="section-label" style="justify-content:center;display:flex">LET'S TALK GROWTH</div>
+    <div class="cta-title reveal">Ready to build<br>your <em style="font-style:normal;color:var(--accent)">US empire?</em></div>
+    <p class="cta-sub reveal">Book a free 30-min discovery call. No pitch, no commitment.<br>We'll show you exactly where the growth opportunity is for your brand.</p>
+    <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap" class="reveal">
+      <a href="#" class="btn-primary btn-pulse" style="font-size:1rem;padding:1rem 2.25rem">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        Book a Discovery Call
+      </a>
+      <a href="#" class="btn-outline" style="font-size:1rem;padding:1rem 2.25rem">Download Q2 2026 Report</a>
+    </div>
+    <div class="email-form reveal">
+      <input class="email-input" type="email" placeholder="your@brand.com"/>
+      <a href="#" class="btn-primary">Get Quarterly Insights</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-grid">
+    <div>
+      <div class="footer-brand">HATCHE<span>COM</span></div>
+      <p class="footer-desc">We help international brands scale in the US market — Amazon, Shopify, and AI-powered brand visibility. Embedded teams. Proven results.</p>
+      <div style="margin-top:1.25rem;font-family:var(--font-mono);font-size:.65rem;color:var(--muted);letter-spacing:.06em">CLARITY IN DATA · PRECISION IN ACTION · PERFORMANCE AT SCALE</div>
+    </div>
+    <div class="footer-col">
+      <h4>Services</h4>
+      <a href="#">Brand Intelligence</a>
+      <a href="#">Market Entry</a>
+      <a href="#">Growth Team</a>
+      <a href="#">HatchOmni AI</a>
+      <a href="#">Marketplace Growth</a>
+    </div>
+    <div class="footer-col">
+      <h4>Resources</h4>
+      <a href="#">Blog</a>
+      <a href="#">Quadrant Reports</a>
+      <a href="#">Case Studies</a>
+      <a href="#">Amazon Playbook</a>
+      <a href="#">AI Visibility Guide</a>
+    </div>
+    <div class="footer-col">
+      <h4>Company</h4>
+      <a href="#">About Us</a>
+      <a href="#">Our Team</a>
+      <a href="#">Contact</a>
+      <a href="#">Careers</a>
+      <a href="#">Privacy Policy</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="footer-copy">© 2026 HATCHECOM. ALL RIGHTS RESERVED.</div>
+    <div class="social-links">
+      <a href="#" class="social-link" title="LinkedIn">
+        <svg viewBox="0 0 24 24"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+      </a>
+      <a href="#" class="social-link" title="X / Twitter">
+        <svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+      </a>
+      <a href="#" class="social-link" title="Instagram">
+        <svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+      </a>
+    </div>
+  </div>
+</footer>
+
+<script>
+gsap.registerPlugin(ScrollTrigger);
+
+// Hero entrance
+const tl = gsap.timeline({delay:.2});
+tl.to('.hero-badge',{opacity:1,y:0,duration:.6,ease:'power2.out'})
+  .to('h1.hero-title',{opacity:1,y:0,duration:.7,ease:'power2.out'},'-=.3')
+  .to('.hero-sub',{opacity:1,y:0,duration:.6,ease:'power2.out'},'-=.4')
+  .to('.hero-actions',{opacity:1,y:0,duration:.5,ease:'power2.out'},'-=.3')
+  .to('#scroll-ind',{opacity:.6,duration:.5},'-=.2');
+
+// Scroll reveals
+gsap.utils.toArray('.reveal').forEach((el,i)=>{
+  gsap.to(el,{
+    opacity:1,y:0,duration:.65,ease:'power2.out',
+    scrollTrigger:{trigger:el,start:'top 88%',toggleActions:'play none none none'},
+    delay:(i%3)*.08
+  });
+});
+
+// Counter animation
+function animateCounter(el){
+  const target = parseFloat(el.dataset.target);
+  const prefix = el.dataset.prefix||'';
+  const suffix = el.dataset.suffix||'';
+  const decimals = parseInt(el.dataset.decimal||0);
+  const duration = 1800;
+  const start = performance.now();
+  function update(now){
+    const elapsed = now - start;
+    const progress = Math.min(elapsed/duration,1);
+    const eased = 1-Math.pow(1-progress,3);
+    const val = target*eased;
+    el.textContent = prefix+(decimals>0?val.toFixed(decimals):Math.floor(val))+suffix;
+    if(progress<1) requestAnimationFrame(update);
+    else el.textContent = prefix+(decimals>0?target.toFixed(decimals):target)+suffix;
+  }
+  requestAnimationFrame(update);
+}
+
+document.querySelectorAll('.metric-num').forEach(el=>{
+  let fired = false;
+  ScrollTrigger.create({
+    trigger:el,start:'top 85%',
+    onEnter:()=>{if(!fired){fired=true;animateCounter(el);}}
+  });
+});
+
+// Methodology step hover
+document.querySelectorAll('.method-step').forEach(step=>{
+  step.addEventListener('mouseenter',()=>{
+    document.querySelectorAll('.method-step').forEach(s=>s.classList.remove('active'));
+    step.classList.add('active');
+  });
+});
+
+// Mobile menu
+function toggleMenu(){
+  const burger = document.getElementById('burger');
+  const menu = document.getElementById('mobile-menu');
+  burger.classList.toggle('open');
+  menu.classList.toggle('open');
+}
+
+// Navbar scroll opacity
+window.addEventListener('scroll',()=>{
+  const nav = document.getElementById('navbar');
+  if(window.scrollY>60){
+    nav.style.borderBottomColor='rgba(74,158,255,0.12)';
+  } else {
+    nav.style.borderBottomColor='rgba(74,158,255,0.08)';
+  }
+});
+</script>
+</body>
+</html>
